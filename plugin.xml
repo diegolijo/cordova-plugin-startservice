@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-startservice"
+    version="1.0.0">
+
+    <name>startservice</name>
+
+    <description>
+    </description>
+
+    <keywords>startservice</keywords>
+    <repo>https://github.com/diegolijo/cordova-plugin-startservice</repo>
+    <license>Apache 2.0</license>
+
+    <author>Diego Santiago Lijó</author>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0" />
+    </engines>
+
+    <!-- js -->
+    <js-module src="www/start-service.js" name="StartService">
+        <clobbers target="cordova.plugins.startService" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="StartService">
+                <param name="android-package"
+                    value="com.vayapedal.startservice.StartService" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service
+                android:name="com.vayapedal.startservice.ServiceLauncher"
+                android:enabled="true"
+                android:exported="false"
+                android:foregroundServiceType="dataSync" />
+        </config-file>
+
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <receiver
+                android:name="com.vayapedal.startservice.BootReceiver"
+                android:enabled="true"
+                android:exported="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+            <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+        </config-file>
+
+        <source-file src="src/android/BootReceiver.java"
+            target-dir="src/com/vayapedal/startservice" />
+
+        <source-file src="src/android/AppLauncher.java"
+            target-dir="src/com/vayapedal/startservice" />
+
+        <source-file src="src/android/StartService.java"
+            target-dir="src/com/vayapedal/startservice" />
+
+        <source-file src="src/android/ServiceLauncher.java"
+            target-dir="src/com/vayapedal/startservice" />
+    </platform>
+
+
+</plugin>
