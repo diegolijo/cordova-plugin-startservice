@@ -35,9 +35,13 @@ public class AlwaysTop extends CordovaPlugin {
       throws JSONException {
     if (action.equalsIgnoreCase("enable")) {
       enableAutoStart(cordova.getActivity().getLocalClassName(), callback);
+      PluginResult result = new PluginResult(PluginResult.Status.OK, true);
+      callback.sendPluginResult(result);
       return true;
     } else if (action.equalsIgnoreCase("disable")) {
       disableAutoStart(callback);
+      PluginResult result = new PluginResult(PluginResult.Status.OK, true);
+      callback.sendPluginResult(result);
       return true;
     } else if (action.equalsIgnoreCase("check_permission")) {
       boolean b = checkPermission();
@@ -120,7 +124,7 @@ public class AlwaysTop extends CordovaPlugin {
     }
   }
 
-  private boolean isServiceRunning( ) {
+  private boolean isServiceRunning() {
     ActivityManager manager = (ActivityManager) cordova.getActivity().getApplicationContext()
         .getSystemService(Context.ACTIVITY_SERVICE);
     for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

@@ -1,11 +1,11 @@
 const exec = require('cordova/exec');
 
 const AlwaysTop = {
-    enable: function () {
-        exec(null, null, 'AlwaysTop', 'enable', []);
+    enable: function (cb, err) {
+        exec(cb, err,  'AlwaysTop', 'enable', []);
     },
-    disable: function () {
-        exec(null, null, 'AlwaysTop', 'disable', []);
+    disable: function (cb, err) {
+        exec(cb, err,  'AlwaysTop', 'disable', []);
     },
     isEnable: function (cb, err) {
         exec(cb, err, 'AlwaysTop', 'is_service_running', []);
