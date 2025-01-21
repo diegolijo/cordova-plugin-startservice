@@ -68,7 +68,7 @@
         <source-file src="src/android/BootReceiver.java"
             target-dir="src/com/vayapedal/alwaystop" />
 
-        <source-file src="src/android/AppLauncher.java"
+        <source-file src="src/android/LifecycleHandler.java"
             target-dir="src/com/vayapedal/alwaystop" />
 
         <source-file src="src/android/ServiceLauncher.java"

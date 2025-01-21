@@ -1,7 +1,9 @@
 package com.vayapedal.alwaystop;
 
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,14 +23,18 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.vayapedal.alwaystop.ServiceLauncher;
-
 import java.util.Objects;
 
 public class AlwaysTop extends CordovaPlugin {
   public static final int REQUEST_CODE = 100;
   public static final String PREFS = "autostart";
   public static final String ACTIVITY_CLASS_NAME = "class";
+
+  @Override
+  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+    super.initialize(cordova, webView);
+    cordova.getActivity().getApplication().registerActivityLifecycleCallbacks(new LifecycleHandler());
+  }
 
   @Override
   public boolean execute(final String action, final JSONArray args, final CallbackContext callback)
