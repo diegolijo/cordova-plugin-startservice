@@ -1,19 +1,19 @@
 {
-  "name": "cordova-plugin-startservice",
+  "name": "cordova-plugin-alwaystop",
   "version": "1.0.0",
   "description": "",
   "cordova": {
-    "id": "cordova-plugin-startservice",
+    "id": "cordova-plugin-alwaystop",
     "platforms": [
       "android"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/diegolijo/cordova-plugin-startservice.git"
+    "url": "https://github.com/diegolijo/cordova-plugin-alwaystop.git"
   },
   "keywords": [
-    "startservice",
+    "alwaystop",
     "ecosystem:cordova",
     "cordova-android"
   ],
@@ -24,7 +24,7 @@
   "author": "Diego Santiago Lijó",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/diegolijo/cordova-plugin-startservice/issues"
+    "url": "https://github.com/diegolijo/cordova-plugin-alwaystop/issues"
   },
-  "homepage": "https://github.com/diegolijo/cordova-plugin-startservice"
+  "homepage": "https://github.com/diegolijo/cordova-plugin-alwaystop"
 }
