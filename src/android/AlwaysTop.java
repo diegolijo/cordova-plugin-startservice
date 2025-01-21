@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,8 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.vayapedal.alwaystop.ServiceLauncher;
+
 import java.util.Objects;
 
 public class AlwaysTop extends CordovaPlugin {
@@ -29,7 +32,7 @@ public class AlwaysTop extends CordovaPlugin {
 
   @Override
   public boolean execute(final String action, final JSONArray args, final CallbackContext callback)
-    throws JSONException {
+      throws JSONException {
     if (action.equalsIgnoreCase("enable")) {
       enableAutoStart(cordova.getActivity().getLocalClassName(), callback);
       return true;
@@ -46,6 +49,10 @@ public class AlwaysTop extends CordovaPlugin {
       return true;
     } else if (action.equalsIgnoreCase("app_settings")) {
       openAppSettings();
+      return true;
+    } else if (action.equalsIgnoreCase("is_service_running")) {
+      PluginResult result = new PluginResult(PluginResult.Status.OK, isServiceRunning());
+      callback.sendPluginResult(result);
       return true;
     }
     return false;
@@ -65,10 +72,10 @@ public class AlwaysTop extends CordovaPlugin {
       Intent serviceIntent = new Intent(cordova.getActivity(), ServiceLauncher.class);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         cordova.getActivity().getApplicationContext().startForegroundService(serviceIntent);
-      }else{
+      } else {
         cordova.getActivity().getApplicationContext().startService(serviceIntent); // todo probar
       }
-      PluginResult result = new PluginResult(PluginResult.Status.ERROR, b);
+      PluginResult result = new PluginResult(PluginResult.Status.OK, true);
       result.setKeepCallback(false);
       callback.sendPluginResult(result);
     } catch (Exception e) {
@@ -80,6 +87,13 @@ public class AlwaysTop extends CordovaPlugin {
 
   private void disableAutoStart(CallbackContext callback) {
     setAutoStart(null, false);
+    if (isServiceRunning()) {
+      Intent serviceIntent = new Intent(cordova.getActivity().getApplicationContext(), ServiceLauncher.class);
+      cordova.getActivity().getApplicationContext().stopService(serviceIntent);
+    }
+    PluginResult result = new PluginResult(PluginResult.Status.OK, true);
+    result.setKeepCallback(false);
+    callback.sendPluginResult(result);
   }
 
   private void setAutoStart(final String className, boolean enabled) {
@@ -106,10 +120,21 @@ public class AlwaysTop extends CordovaPlugin {
     }
   }
 
+  private boolean isServiceRunning( ) {
+    ActivityManager manager = (ActivityManager) cordova.getActivity().getApplicationContext()
+        .getSystemService(Context.ACTIVITY_SERVICE);
+    for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+      if (ServiceLauncher.class.getName().equals(service.service.getClassName())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private boolean checkPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       return ContextCompat.checkSelfPermission(cordova.getActivity(),
-        Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+          Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
     }
     // versión de Android anterior a Tiramisu, asumimos el permiso concedido
     return true;
@@ -118,8 +143,8 @@ public class AlwaysTop extends CordovaPlugin {
   private void requestNotificationPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       ActivityCompat.requestPermissions(cordova.getActivity(),
-        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-        REQUEST_CODE);
+          new String[] { Manifest.permission.POST_NOTIFICATIONS },
+          REQUEST_CODE);
     }
   }
 

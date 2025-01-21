@@ -37,6 +37,11 @@ public class ServiceLauncher extends Service {
   }
 
   @Override
+  public void onDestroy() {
+    timer.cancel();
+  }
+
+  @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null && "STOP_SERVICE".equals(intent.getAction())) {
       stopSelf();

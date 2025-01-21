@@ -7,6 +7,9 @@ const AlwaysTop = {
     disable: function () {
         exec(null, null, 'AlwaysTop', 'disable', []);
     },
+    isEnable: function (cb, err) {
+        exec(cb, err, 'AlwaysTop', 'is_service_running', []);
+    },
     hasPermission: function (cb, err) {
         exec(cb, err, 'AlwaysTop', 'check_permission', []);
     },
@@ -15,8 +18,7 @@ const AlwaysTop = {
     },
     appSettings: function () {
         exec(null, null, 'AlwaysTop', 'app_settings', []);
-    },
-
+    }
 }
 
 module.exports = AlwaysTop;
