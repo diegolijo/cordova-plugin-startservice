@@ -1,4 +1,4 @@
-package com.vayapedal.startservice;
+package com.vayapedal.alwaystop;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

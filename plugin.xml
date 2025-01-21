@@ -20,32 +20,32 @@
     </engines>
 
     <!-- js -->
-    <js-module src="www/start-service.js" name="StartService">
-        <clobbers target="cordova.plugins.startService" />
+    <js-module src="www/always-top.js" name="AlwaysTop">
+        <clobbers target="cordova.plugins.AlwaysTop" />
     </js-module>
 
     <!-- android -->
     <platform name="android">
 
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="StartService">
+            <feature name="AlwaysTop">
                 <param name="android-package"
-                    value="com.vayapedal.startservice.StartService" />
+                    value="com.vayapedal.alwaystop.AlwaysTop" />
             </feature>
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <service
-                android:name="com.vayapedal.startservice.ServiceLauncher"
+                android:name="com.vayapedal.alwaystop.ServiceLauncher"
                 android:enabled="true"
                 android:exported="false"
-                android:foregroundServiceType="dataSync" />
+                android:foregroundServiceType="mediaProjection" />
         </config-file>
 
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
-                android:name="com.vayapedal.startservice.BootReceiver"
+                android:name="com.vayapedal.alwaystop.BootReceiver"
                 android:enabled="true"
                 android:exported="true">
                 <intent-filter>
@@ -62,17 +62,21 @@
             <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
         </config-file>
 
+        <source-file src="src/android/AlwaysTop.java"
+            target-dir="src/com/vayapedal/alwaystop" />
+
         <source-file src="src/android/BootReceiver.java"
-            target-dir="src/com/vayapedal/startservice" />
+            target-dir="src/com/vayapedal/alwaystop" />
 
         <source-file src="src/android/AppLauncher.java"
-            target-dir="src/com/vayapedal/startservice" />
-
-        <source-file src="src/android/StartService.java"
-            target-dir="src/com/vayapedal/startservice" />
+            target-dir="src/com/vayapedal/alwaystop" />
 
         <source-file src="src/android/ServiceLauncher.java"
-            target-dir="src/com/vayapedal/startservice" />
+            target-dir="src/com/vayapedal/alwaystop" />
+
+        <resource-file
+            src="assets/icon.xml"
+            target="res/drawable/service_icon.xml" />
     </platform>
 
 

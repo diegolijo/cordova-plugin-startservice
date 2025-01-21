@@ -1,8 +1,9 @@
-package com.vayapedal.startservice;
+package com.vayapedal.alwaystop;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.cocodin.cocopricepharma.MainActivity;
 import com.cocodin.cocopricepharma.R;
 
 import java.util.Objects;
@@ -36,7 +38,11 @@ public class ServiceLauncher extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    task(this, intent);
+    if (intent != null && "STOP_SERVICE".equals(intent.getAction())) {
+      stopSelf();
+      return START_NOT_STICKY;
+    }
+    task(this);
     return START_STICKY;
   }
 
@@ -58,15 +64,25 @@ public class ServiceLauncher extends Service {
   }
 
   private Notification createNotification() {
+    // Intent para abrir la aplicación
+    Intent openAppIntent = new Intent(this, MainActivity.class);
+    PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    // Intent para detener el servicio
+    Intent stopServiceIntent = new Intent(this, ServiceLauncher.class);
+    stopServiceIntent.setAction("STOP_SERVICE");
+    PendingIntent stopServicePendingIntent = PendingIntent.getService(this, 1, stopServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "boot_service_channel")
-      .setContentTitle("Servicio en ejecución")
-      .setContentText("El servicio está activo")
-      .setSmallIcon(R.drawable.ic_cdv_splashscreen) //TODO añadir assset al plugin
-      .setPriority(NotificationCompat.PRIORITY_LOW);
+      .setContentTitle("AlwaysTop")
+      .setContentText("Mantendra la aplicación siempre visible")
+      .setSmallIcon(R.drawable.service_icon)
+      .setPriority(NotificationCompat.PRIORITY_LOW)
+      .setContentIntent(openAppPendingIntent)
+      .addAction(R.drawable.service_icon, "detener", stopServicePendingIntent);
     return builder.build();
   }
 
-  public void task(Context context, Intent intent) {
+  public void task(Context context) {
     if (timer == null) {
       timer = new Timer();
       timer.schedule(new TimerTask() {
