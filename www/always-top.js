@@ -2,10 +2,10 @@ const exec = require('cordova/exec');
 
 const AlwaysTop = {
     enable: function (cb, err) {
-        exec(cb, err,  'AlwaysTop', 'enable', []);
+        exec(cb, err, 'AlwaysTop', 'enable', []);
     },
     disable: function (cb, err) {
-        exec(cb, err,  'AlwaysTop', 'disable', []);
+        exec(cb, err, 'AlwaysTop', 'disable', []);
     },
     isEnable: function (cb, err) {
         exec(cb, err, 'AlwaysTop', 'is_service_running', []);
@@ -18,6 +18,12 @@ const AlwaysTop = {
     },
     appSettings: function () {
         exec(null, null, 'AlwaysTop', 'app_settings', []);
+    },
+    bateryNotOptimized: function (cb, err) {
+        exec(cb, err, 'AlwaysTop', 'batery_not_optimized', []);
+    },
+    drawOverlays: function (cb, err) {
+        exec(cb, err, 'AlwaysTop', 'draw_overlays', []);
     }
 }
 
