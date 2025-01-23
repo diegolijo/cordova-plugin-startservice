@@ -5,34 +5,53 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.Manifest;
+
 import android.app.ActivityManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.ComponentName;
+
 import android.net.Uri;
+
 import android.os.Build;
 import android.os.PowerManager;
+
 import android.provider.Settings;
+
 import android.util.Log;
+
+import android.view.WindowManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.Objects;
 
-import org.json.JSONObject;
-
 public class AlwaysTop extends CordovaPlugin {
   CallbackContext callbackContext = null;
   public static final int REQUEST_CODE = 1001;
   public static final String PREFS = "autostart";
   public static final String ACTIVITY_CLASS_NAME = "class";
+
+  private static final String ACTION_ENABLE = "enable";
+  private static final String ACTION_DISABLE = "disable";
+  private static final String ACTION_CHECK_PERMISSION = "check_permission";
+  private static final String ACTION_REQUEST_PERMISSION = "request_permission";
+  private static final String ACTION_APP_SETTINGS = "app_settings";
+  private static final String ACTION_IS_SERVICE_RUNNING = "is_service_running";
+  private static final String ACTION_BATTERY_NOT_OPTIMIZED = "batery_not_optimized";
+  private static final String ACTION_DRAW_OVERLAYS = "draw_overlays";
+  private static final String ACTION_KEEP_AWAKE = "keep_awake";
+  private static final String ACTION_ALLOW_SLEEP_AGAIN = "allow_sleep_again";
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -42,40 +61,59 @@ public class AlwaysTop extends CordovaPlugin {
 
   @Override
   public boolean execute(final String action, final JSONArray args, final CallbackContext callback)
-    throws JSONException {
-    if (action.equalsIgnoreCase("enable")) {
-      callbackContext = callback;
-      enableAutoStart(cordova.getActivity().getLocalClassName());
-      return true;
-    } else if (action.equalsIgnoreCase("disable")) {
-      callbackContext = callback;
-      disableAutoStart();
-      return true;
-    } else if (action.equalsIgnoreCase("check_permission")) {
-      PluginResult result = new PluginResult(PluginResult.Status.OK, checkPermission());
-      callback.sendPluginResult(result);
-      return true;
-    } else if (action.equalsIgnoreCase("request_permission")) {
-      callbackContext = callback;
-      requestNotificationPermission();
-      return true;
-    } else if (action.equalsIgnoreCase("app_settings")) {
-      openAppSettings();
-      return true;
-    } else if (action.equalsIgnoreCase("is_service_running")) {
-      PluginResult result = new PluginResult(PluginResult.Status.OK, isServiceRunning());
-      callback.sendPluginResult(result);
-      return true;
-    } else if (action.equalsIgnoreCase("batery_not_optimized")) {
-      callbackContext = callback;
-      batteryNotOptimized();
-      return true;
-    } else if (action.equalsIgnoreCase("draw_overlays")) {
-      PluginResult result = new PluginResult(PluginResult.Status.OK, canDrawOverlays());
-      callback.sendPluginResult(result);
-      return true;
+      throws JSONException {
+    try {
+      if (ACTION_ENABLE.equals(action)) {
+        callbackContext = callback;
+        enableAutoStart(cordova.getActivity().getLocalClassName());
+        return true;
+      } else if (ACTION_DISABLE.equals(action)) {
+        callbackContext = callback;
+        disableAutoStart();
+        return true;
+      } else if (ACTION_CHECK_PERMISSION.equals(action)) {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, checkPermission());
+        callback.sendPluginResult(result);
+        return true;
+      } else if (ACTION_REQUEST_PERMISSION.equals(action)) {
+        callbackContext = callback;
+        requestNotificationPermission();
+        return true;
+      } else if (ACTION_APP_SETTINGS.equals(action)) {
+        cordova.getActivity().runOnUiThread(this::openAppSettings);
+        return true;
+      } else if (ACTION_IS_SERVICE_RUNNING.equals(action)) {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, isServiceRunning());
+        callback.sendPluginResult(result);
+        return true;
+      } else if (ACTION_BATTERY_NOT_OPTIMIZED.equals(action)) {
+        callbackContext = callback;
+        bateryNotOptimized();
+        return true;
+      } else if (ACTION_DRAW_OVERLAYS.equals(action)) {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, canDrawOverlays());
+        callback.sendPluginResult(result);
+        return true;
+      } else if (ACTION_KEEP_AWAKE.equals(action)) {
+        cordova.getActivity().runOnUiThread(
+            () -> {
+              cordova.getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+              callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+            });
+        return true;
+      } else if (ACTION_ALLOW_SLEEP_AGAIN.equals(action)) {
+        cordova.getActivity().runOnUiThread(
+            () -> {
+              cordova.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+              callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+            });
+        return true;
+      }
+      return false;
+    } catch (Exception e) {
+      callbackContext.error(e.getMessage());
+      return false;
     }
-    return false;
   }
 
   private void enableAutoStart(final String className) {
@@ -138,7 +176,7 @@ public class AlwaysTop extends CordovaPlugin {
 
   private boolean isServiceRunning() {
     ActivityManager manager = (ActivityManager) cordova.getActivity().getApplicationContext()
-      .getSystemService(Context.ACTIVITY_SERVICE);
+        .getSystemService(Context.ACTIVITY_SERVICE);
     for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
       if (ServiceLauncher.class.getName().equals(service.service.getClassName())) {
         return true;
@@ -151,7 +189,7 @@ public class AlwaysTop extends CordovaPlugin {
   private boolean checkPermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       return ContextCompat.checkSelfPermission(cordova.getActivity(),
-        Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+          Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
     }
     // versión de Android anterior a Tiramisu, asumimos el permiso concedido
     return true;
@@ -165,9 +203,9 @@ public class AlwaysTop extends CordovaPlugin {
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       ActivityCompat.requestPermissions(
-        cordova.getActivity(),
-        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-        REQUEST_CODE);
+          cordova.getActivity(),
+          new String[] { Manifest.permission.POST_NOTIFICATIONS },
+          REQUEST_CODE);
     }
   }
 
@@ -186,17 +224,16 @@ public class AlwaysTop extends CordovaPlugin {
   /**
    * Verifica restricciones de la batería.
    */
-  public void batteryNotOptimized() {
+  public void bateryNotOptimized() {
     Context context = cordova.getActivity().getApplicationContext();
-    boolean batteryNotOptimized = false;
+    boolean bateryNotOptimized = false;
     PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
     if (powerManager != null) {
-      batteryNotOptimized = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+      bateryNotOptimized = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
     }
-    PluginResult result = new PluginResult(PluginResult.Status.OK, batteryNotOptimized);
+    PluginResult result = new PluginResult(PluginResult.Status.OK, bateryNotOptimized);
     callbackContext.sendPluginResult(result);
   }
-
 
   /**
    * Verifica si la aplicación tiene el permiso "Mostrar encima de otras

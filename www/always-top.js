@@ -24,6 +24,12 @@ const AlwaysTop = {
     },
     drawOverlays: function (cb, err) {
         exec(cb, err, 'AlwaysTop', 'draw_overlays', []);
+    },
+    keepAwake: function (cb, err) {
+        exec(cb, err, 'AlwaysTop', 'keep_awake', []);
+    },
+    allowSleepAgain: function (cb, err) {
+        exec(cb, err, 'AlwaysTop', 'allow_sleep_again', []);
     }
 }
 
