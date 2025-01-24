@@ -30,13 +30,13 @@
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="AlwaysTop">
                 <param name="android-package"
-                    value="com.vayapedal.alwaystop.AlwaysTop" />
+                    value="com.cocodin.alwaystop.AlwaysTop" />
             </feature>
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <service
-                android:name="com.vayapedal.alwaystop.ServiceLauncher"
+                android:name="com.cocodin.alwaystop.ServiceLauncher"
                 android:enabled="true"
                 android:exported="false"
                 android:foregroundServiceType="mediaProjection" />
@@ -45,7 +45,7 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <receiver
-                android:name="com.vayapedal.alwaystop.BootReceiver"
+                android:name="com.cocodin.alwaystop.BootReceiver"
                 android:enabled="true"
                 android:exported="true">
                 <intent-filter>
@@ -63,16 +63,16 @@
         </config-file>
 
         <source-file src="src/android/AlwaysTop.java"
-            target-dir="src/com/vayapedal/alwaystop" />
+            target-dir="src/com/cocodin/alwaystop" />
 
         <source-file src="src/android/BootReceiver.java"
-            target-dir="src/com/vayapedal/alwaystop" />
+            target-dir="src/com/cocodin/alwaystop" />
 
         <source-file src="src/android/LifecycleHandler.java"
-            target-dir="src/com/vayapedal/alwaystop" />
+            target-dir="src/com/cocodin/alwaystop" />
 
         <source-file src="src/android/ServiceLauncher.java"
-            target-dir="src/com/vayapedal/alwaystop" />
+            target-dir="src/com/cocodin/alwaystop" />
 
         <resource-file
             src="assets/icon.xml"

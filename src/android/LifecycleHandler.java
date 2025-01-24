@@ -1,4 +1,4 @@
-package com.vayapedal.alwaystop;
+package com.cocodin.alwaystop;
 
 import android.app.Activity;
 import android.app.Application;

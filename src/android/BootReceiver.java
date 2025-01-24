@@ -1,4 +1,4 @@
-package com.vayapedal.alwaystop;
+package com.cocodin.alwaystop;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

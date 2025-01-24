@@ -1,4 +1,4 @@
-package com.vayapedal.alwaystop;
+package com.cocodin.alwaystop;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
