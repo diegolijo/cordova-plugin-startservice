@@ -10,10 +10,10 @@
     </description>
 
     <keywords>alwaystop</keywords>
-    <repo>https://github.com/diegolijo/cordova-plugin-alwaystop</repo>
+    <repo>https://github.com/cocodintechnology/cordova-plugin-alwaystop</repo>
     <license>Apache 2.0</license>
 
-    <author>Diego Santiago Lijó</author>
+    <author>Diego Santiago Lijó - Cocodin Technology SL</author>
 
     <engines>
         <engine name="cordova" version=">=3.0.0" />

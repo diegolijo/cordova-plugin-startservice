@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-alwaystop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "cordova": {
     "id": "cordova-plugin-alwaystop",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/diegolijo/cordova-plugin-alwaystop.git"
+    "url": "https://github.com/cocodintechnology/cordova-plugin-alwaystop.git"
   },
   "keywords": [
     "alwaystop",
@@ -21,10 +21,10 @@
     "name": "cordova",
     "version": ">=12.0.0"
   },
-  "author": "Diego Santiago Lijó",
+  "author": "Diego Santiago Lijó - Cocodin Technology SL",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/diegolijo/cordova-plugin-alwaystop/issues"
+    "url": "https://github.com/cocodintechnology/cordova-plugin-alwaystop/issues"
   },
-  "homepage": "https://github.com/diegolijo/cordova-plugin-alwaystop"
+  "homepage": "https://github.com/cocodintechnology/cordova-plugin-alwaystop"
 }
